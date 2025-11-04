@@ -1,0 +1,87 @@
+{
+  "studies": [
+    {
+      "protocolSection": {
+        "identificationModule": {
+          "nctId": "NCT04267848",
+          "briefTitle": "Study of XYZ Inhibitor in Metastatic Melanoma With BRAF V600 Mutation"
+        },
+        "statusModule": {
+          "overallStatus": "RECRUITING"
+        },
+        "conditionsModule": {
+          "conditions": ["Metastatic Melanoma", "BRAF V600 Mutation"]
+        },
+        "designModule": {
+          "phases": ["Phase 2"]
+        },
+        "armsInterventionsModule": {
+          "interventions": [
+            {
+              "name": "BRAF Inhibitor XYZ"
+            },
+            {
+              "name": "Immunotherapy Combination"
+            }
+          ]
+        },
+        "eligibilityModule": {
+          "eligibilityCriteria": "Inclusion Criteria:\n- Age ≥18 years\n- Confirmed BRAF V600E or V600K mutation\n- ECOG performance status 0-1\n- Adequate organ function\n\nExclusion Criteria:\n- Prior BRAF inhibitor therapy\n- Active brain metastases\n- Significant cardiovascular disease",
+          "minimumAge": "18 Years",
+          "maximumAge": "75 Years",
+          "sex": "ALL",
+          "healthyVolunteers": false
+        },
+        "contactsLocationsModule": {
+          "locations": [
+            {
+              "facility": "MD Anderson Cancer Center",
+              "city": "Houston",
+              "state": "TX",
+              "country": "United States"
+            },
+            {
+              "facility": "Memorial Sloan Kettering Cancer Center",
+              "city": "New York",
+              "state": "NY",
+              "country": "United States"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "protocolSection": {
+        "identificationModule": {
+          "nctId": "NCT12345678",
+          "briefTitle": "Immunotherapy Trial for Advanced Melanoma"
+        },
+        "statusModule": {
+          "overallStatus": "NOT_YET_RECRUITING"
+        },
+        "conditionsModule": {
+          "conditions": ["Melanoma", "Advanced Cancer"]
+        },
+        "designModule": {
+          "phases": ["Phase 1", "Phase 2"]
+        },
+        "eligibilityModule": {
+          "minimumAge": "21 Years",
+          "sex": "ALL",
+          "healthyVolunteers": false
+        },
+        "contactsLocationsModule": {
+          "locations": [
+            {
+              "facility": "UCSF Helen Diller Family Comprehensive Cancer Center",
+              "city": "San Francisco",
+              "state": "CA",
+              "country": "United States"
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "totalCount": 2
+}

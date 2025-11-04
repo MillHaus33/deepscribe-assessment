@@ -1,0 +1,37 @@
+Doctor: Good morning, Mr. Johnson. How are you feeling today?
+
+Patient: Morning, Doc. I'm hanging in there. The fatigue is still pretty rough, but I'm managing.
+
+Doctor: I understand. Let's review your recent test results and discuss where we are with your treatment. So, you're a 55-year-old male, and we initially diagnosed you with metastatic melanoma back in January 2023. The biopsy confirmed the BRAF V600E mutation, which is important for treatment options.
+
+Patient: Right, yeah. The BRAF mutation.
+
+Doctor: Exactly. Your PD-L1 also came back positive, which is another marker we consider for immunotherapy. We've tried pembrolizumab and ipilimumab in the past, as you know.
+
+Patient: Yeah, the immunotherapy. Had some rough side effects, but we pushed through.
+
+Doctor: You did well with those. Your performance status is currently ECOG 1, which means you're still able to carry out normal activities with some symptoms. That's actually quite good given your Stage IV diagnosis.
+
+Patient: I try to stay active when I can. Helps keep my spirits up.
+
+Doctor: That's excellent. Now, regarding your location - you're in San Francisco, California, correct? Zip code 94102?
+
+Patient: Yes, that's right. Born and raised in the Bay Area.
+
+Doctor: Good. Now, have you noticed any new symptoms or changes since our last visit?
+
+Patient: Not really. Same fatigue, occasional headaches, but nothing alarming.
+
+Doctor: Okay. Based on where we are, I think we should consider looking into some clinical trials. There are several promising studies for melanoma patients with BRAF mutations. Would you be interested in exploring that option?
+
+Patient: Yeah, absolutely. If there's something new that might help, I'm willing to try.
+
+Doctor: Great. I'll have my team pull together some options that match your profile. We'll focus on trials recruiting in the Bay Area or nearby so you don't have to travel too far.
+
+Patient: That would be ideal. My wife works full-time, so the less travel, the better.
+
+Doctor: Understood. We'll make sure to find something convenient. I'll follow up with you early next week with some trial options.
+
+Patient: Sounds good, Doc. Thank you.
+
+Doctor: You're very welcome. Take care, and call if anything changes.

@@ -1,0 +1,17 @@
+Doctor: Hello, how are you today?
+
+Patient: I'm okay, I guess.
+
+Doctor: Let's talk about your diagnosis. You have cancer, and we need to discuss treatment options.
+
+Patient: Yes, I know.
+
+Doctor: We'll need to run some more tests to determine the best course of action.
+
+Patient: Okay.
+
+Doctor: Do you have any questions for me today?
+
+Patient: Not right now.
+
+Doctor: Alright, we'll schedule those tests and follow up soon.
