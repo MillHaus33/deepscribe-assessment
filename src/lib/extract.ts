@@ -21,12 +21,61 @@ Extract the following information when available:
 
 Guidelines:
 1. If information is not mentioned or unclear, use null or omit the field
-2. Be precise with medical terminology - use exact terms from the transcript
-3. For conditions, include both primary diagnosis and related conditions
-4. Extract biomarkers even if partially mentioned (name without value is acceptable)
-5. Include all prior therapies mentioned, even if unsuccessful
-6. If the patient's location is not explicitly stated, omit it rather than guess
-7. Use standard formats: dates as "YYYY-MM-DD", ages as numbers
+2. If the transcript mentions only generic or vague terms (e.g., 'cancer', 'tumor', 'illness') without specifics, extract exactly those terms. Do NOT expand generic terms into specific diagnoses or infer details that are not explicitly stated.
+3. Be precise with medical terminology - use exact terms from the transcript
+4. For conditions, include both primary diagnosis and related conditions
+5. Extract biomarkers even if partially mentioned (name without value is acceptable)
+6. Include all prior therapies mentioned, even if unsuccessful
+7. If the patient's location is not explicitly stated, omit it rather than guess
+8. Use standard formats: dates as "YYYY-MM-DD", ages as numbers
+
+Additionally, generate ClinicalTrials.gov API query parameters using ESSIE expression syntax:
+
+**ctgovQuery.conditionQuery** (for query.cond parameter):
+- Generate an ESSIE expression using STANDARD, BROAD disease categories that clinical trials typically use
+- Use the common disease name, NOT specific subtypes or pathological classifications
+- DO NOT include biomarkers, stage, or metastatic status here (those go in termQuery)
+- Think about how trials are named in registries - use those standard terms
+- Examples:
+  - Good: "breast cancer" (not "invasive ductal carcinoma" or "ductal carcinoma in situ")
+  - Good: "melanoma" (not "metastatic melanoma" or "cutaneous melanoma")
+  - Good: "non-small cell lung cancer" (this is already a standard category)
+  - Good: "glioblastoma" (specific enough but still standard)
+  - Good: "colorectal cancer" (not "colon adenocarcinoma")
+  - Avoid: Too generic like just "cancer"
+  - Avoid: Pathological subtypes like "invasive ductal carcinoma"
+  - Avoid: Including stage/biomarkers like "metastatic melanoma" or "HER2+ breast cancer"
+- If no condition is found, return empty string ""
+
+**ctgovQuery.termQuery** (for query.term parameter):
+- Generate an ESSIE expression for additional search criteria (this searches across trial titles, descriptions, interventions, and keywords)
+- MUST include biomarkers here if present (NOT in conditionQuery) - use OR for common variations
+- Can also include: stage, metastatic status, or specific treatment types
+- Use OR to cast a wider net and catch variations in terminology
+- Examples:
+  - "(HER2 positive) OR (HER2+) OR (HER2-positive)" (for HER2+ breast cancer)
+  - "(BRAF V600E) OR (BRAF mutation) OR (BRAF V600)" (for BRAF-mutant melanoma)
+  - "(EGFR exon 19) OR (EGFR mutation) OR (EGFR deletion)" (for EGFR+ lung cancer)
+  - "stage IV OR metastatic OR advanced" (for advanced disease)
+  - "(IDH wildtype) OR (IDH-wt) OR (IDH wild-type)" (for glioblastoma)
+  - "(PD-L1 positive) OR (PD-L1+) OR immunotherapy" (for immunotherapy-related trials)
+- Prefer OR over AND to maximize results (system will filter by eligibility later)
+- If no additional search terms are relevant, return empty string ""
+
+ESSIE Syntax Rules:
+- Use parentheses to group terms: "(term1) AND (term2)"
+- Use AND when both conditions must be present
+- Use OR when any condition is acceptable
+- Keep queries focused and medically relevant
+- Avoid overly complex queries (max 3-4 combined terms)
+
+Key Tips for Maximizing Trial Matches:
+- query.cond (conditionQuery) searches ONLY the "Condition" field in CT.gov, which contains disease names
+- query.term (termQuery) searches across ALL fields: title, description, interventions, keywords, eligibility
+- Biomarkers are rarely listed in the Condition field, so they MUST go in termQuery to be found
+- Using broad disease categories in conditionQuery prevents missing trials due to terminology differences
+- The system filters results by age/sex/eligibility later, so it's better to over-match than under-match
+- CT.gov trials use standardized disease terminology, not specific pathological classifications
 
 Return a complete structured JSON object following the PatientProfile schema.`;
 

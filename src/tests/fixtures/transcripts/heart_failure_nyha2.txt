@@ -1,0 +1,21 @@
+Doctor: Hi, how are you feeling today?
+
+Patient: Still getting short of breath when climbing stairs, but I can do normal activities.
+
+Doctor: That sounds like NYHA Class II heart failure symptoms. You were diagnosed two years ago, right?
+
+Patient: Yes. I’m 70 and was diagnosed after a hospitalization for fluid retention.
+
+Doctor: You’re still on metoprolol, lisinopril, and furosemide?
+
+Patient: Yes, daily. My blood pressure has been stable.
+
+Doctor: Any recent hospital visits?
+
+Patient: No, but I feel tired more often lately.
+
+Doctor: Okay, and you’re living in Chicago now?
+
+Patient: Yes, Chicago, Illinois.
+
+Doctor: Great. I’ll look for clinical trials focusing on heart failure with preserved ejection fraction for patients your age.

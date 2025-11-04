@@ -1,0 +1,19 @@
+Doctor: Hi, how are your joints feeling since stopping Humira?
+
+Patient: Still stiff in the morning, maybe worse now that I’m off it.
+
+Doctor: Okay. You’ve tried methotrexate, Humira, and Enbrel without much improvement, right?
+
+Patient: Correct. I was diagnosed about ten years ago, I’m 58 now.
+
+Doctor: Any major health issues besides the arthritis?
+
+Patient: No, just mild high cholesterol.
+
+Doctor: Good. Any surgeries on your joints yet?
+
+Patient: Not yet, just physical therapy.
+
+Doctor: Perfect. You’re still living in Raleigh, North Carolina?
+
+Patient: Yes, that’s right. I’d be interested in new biologic or JAK inhibitor trials for people who didn’t respond to older drugs.

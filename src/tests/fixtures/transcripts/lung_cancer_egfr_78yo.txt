@@ -1,0 +1,25 @@
+Doctor: Hi, thanks for coming in today. How have you been feeling since your last scan?
+
+Patient: Mostly okay, just some shortness of breath when I walk uphill. I wanted to go over the new results.
+
+Doctor: Sure. The CT scan confirms non-small cell lung cancer, adenocarcinoma type. You were diagnosed about six months ago, correct?
+
+Patient: Yes, that’s right. I’m 78 years old and was diagnosed last October.
+
+Doctor: Understood. And your biopsy showed an EGFR exon 19 deletion mutation, right?
+
+Patient: Yes, that’s what my oncologist said. They started me on osimertinib three months ago.
+
+Doctor: Okay, any side effects?
+
+Patient: Mild rash and fatigue, nothing severe.
+
+Doctor: Good. Any brain metastases or other major conditions?
+
+Patient: No brain mets, no heart or kidney issues.
+
+Doctor: Excellent. You live in Los Angeles, California?
+
+Patient: Yes, LA. I’d be open to trials nearby if there are targeted therapy or combination treatment studies.
+
+Doctor: Perfect. Let’s look for EGFR-mutated NSCLC trials for patients on or progressing after osimertinib.

@@ -1,0 +1,17 @@
+Doctor: Hi, thanks for coming in. I reviewed your EMG results, and they confirm early amyotrophic lateral sclerosis.
+
+Patient: That’s what my brother had. I was afraid of this.
+
+Doctor: I know this is difficult. You’re 50, correct?
+
+Patient: Yes. I started noticing weakness in my hands six months ago.
+
+Doctor: Any respiratory symptoms yet?
+
+Patient: Not yet, mostly arms and legs.
+
+Doctor: Okay. You’re in Atlanta, Georgia?
+
+Patient: Yes. I’d like to know about clinical trials for early ALS. I’m open to traveling.
+
+Doctor: Perfect. I’ll search for active ALS trials, especially for genetic or early-onset cases.

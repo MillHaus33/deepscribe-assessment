@@ -19,6 +19,10 @@ vi.mock('@/lib/providers/llm', () => ({
           stage: 'Stage IV',
           performanceStatus: 'ECOG 1',
           location: { city: 'San Francisco', state: 'CA' },
+          ctgovQuery: {
+            conditionQuery: 'melanoma',
+            termQuery: '(BRAF V600E) OR (BRAF mutation) OR (BRAF V600) OR (metastatic) OR (stage IV)',
+          },
         };
         return JSON.stringify(profile); // Return raw JSON string
       }
@@ -27,6 +31,10 @@ vi.mock('@/lib/providers/llm', () => ({
       const defaultProfile = {
         demographics: { age: 50, sex: 'other' },
         conditions: ['General Condition'],
+        ctgovQuery: {
+          conditionQuery: 'general condition',
+          termQuery: '',
+        },
       };
       return JSON.stringify(defaultProfile); // Return raw JSON string
     }),

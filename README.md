@@ -1,6 +1,6 @@
 # DeepScribe Clinical Trials Matcher
 
-A Next.js backend service that analyzes patient-doctor conversation transcripts using AI to extract structured medical data and match patients with relevant clinical trials from ClinicalTrials.gov.
+A full-stack Next.js application that analyzes patient-doctor conversation transcripts using AI to extract structured medical data and match patients with relevant clinical trials from ClinicalTrials.gov. Features an intuitive web interface with drag-and-drop file upload and comprehensive trial results display.
 
 ---
 
@@ -8,11 +8,13 @@ A Next.js backend service that analyzes patient-doctor conversation transcripts 
 
 ### Approach
 
-This application implements a **backend MVP** with a simple API endpoint that processes medical transcripts and returns matching clinical trials.
+This application implements a **full-stack solution** with an intuitive web interface and robust backend API.
+
+**Web Interface:** React-based UI with drag-and-drop file upload, real-time loading states, and comprehensive trial results display. Features responsive design with Tailwind CSS, error handling with dismissible messages, and "no results" states for better user experience.
 
 **LLM Extraction:** Uses OpenAI GPT-4o with structured outputs to extract patient profiles from transcripts. The LLM is prompted to identify demographics (age, sex), medical conditions, biomarkers (e.g., BRAF V600E), disease stage, performance status, and location. Zod schemas enforce runtime validation to ensure data integrity.
 
-**Clinical Trials Matching:** Queries the ClinicalTrials.gov API v2 with intelligent filtering. The query builder combines conditions and biomarkers into search terms, filters by recruiting status, and retrieves detailed trial information including eligibility criteria and locations.
+**Clinical Trials Matching:** Queries the ClinicalTrials.gov API v2 with intelligent filtering. The query builder combines conditions and biomarkers into search terms, filters by recruiting status, and retrieves detailed trial information including eligibility criteria and locations. Unicode normalization ensures compatibility with LLM-generated text.
 
 **Architecture:** Modular design with clear separation of concerns - provider abstraction for LLM flexibility, business logic in extraction layer, and robust error handling with custom error types. TypeScript strict mode and comprehensive testing ensure production readiness.
 
@@ -20,9 +22,11 @@ This application implements a **backend MVP** with a simple API endpoint that pr
 
 ## Live Demo
 
-**API Endpoint:** `[Deployment URL will be added here]`
+**Web Application:** `[Deployment URL will be added here]`
 
-*(To be deployed on Vercel)*
+**API Endpoint:** `[Deployment URL]/api/search`
+
+*(Available for local demonstration - see setup instructions below)*
 
 ---
 
@@ -61,11 +65,24 @@ This application implements a **backend MVP** with a simple API endpoint that pr
    npm run dev
    ```
 
-   The API will be available at `http://localhost:3000`
+   The application will be available at `http://localhost:3000`
 
-5. **Test the API**
+5. **Using the Web Interface**
+
+   Open `http://localhost:3000` in your browser. You can:
+   - **Drag and drop** a transcript file (`.txt` or `.md`) onto the upload area
+   - **Click** the upload area to browse for a file
+   - Sample transcripts are available in `src/tests/fixtures/transcripts/`
+
+   After upload, the app will:
+   - Analyze the transcript using AI (5-10 seconds)
+   - Display matching clinical trials with details
+   - Show trial eligibility criteria and locations
+   - Provide links to ClinicalTrials.gov for each trial
+
+6. **Testing the API Directly** (optional)
    ```bash
-   # Use the sample transcript
+   # Use curl to test the API endpoint
    curl -X POST http://localhost:3000/api/search \
      -F "file=@src/tests/fixtures/transcripts/melanoma_braf_ecog1.txt"
    ```
@@ -126,19 +143,20 @@ curl -X POST http://localhost:3000/api/search \
 
 ## Assumptions
 
-1. **Backend-only MVP** - Focus on robust API implementation; frontend UI is out of scope for this assessment
-2. **Transcript format** - Plain text files (.txt or .md) containing patient-doctor conversations, max 1MB
-3. **LLM reliability** - OpenAI structured outputs provide consistent JSON extraction without additional validation layers
-4. **No authentication** - MVP doesn't require user auth or API keys for client requests
-5. **No data persistence** - Transcripts are processed on-demand and not stored to comply with PHI regulations
-6. **Privacy compliance** - Transcripts are never logged; only structured, de-identified data is processed
-7. **ClinicalTrials.gov availability** - Assumes API is available; handles errors gracefully with 502 responses
+1. **Transcript format** - Plain text files (.txt or .md) containing patient-doctor conversations, max 1MB
+2. **LLM reliability** - OpenAI structured outputs provide consistent JSON extraction without additional validation layers
+3. **No authentication** - MVP doesn't require user auth or API keys for client requests
+4. **No data persistence** - Transcripts are processed on-demand and not stored to comply with PHI regulations
+5. **Privacy compliance** - Transcripts are never logged; only structured, de-identified data is processed
+6. **ClinicalTrials.gov availability** - Assumes API is available; handles errors gracefully with 502 responses
+7. **Client-side processing** - File upload and validation happen in the browser before sending to the API
 
 ---
 
 ## Tech Stack
 
 - **Framework:** Next.js 16 (App Router) with TypeScript (strict mode)
+- **Frontend:** React 19 with Tailwind CSS v4 for styling
 - **AI/LLM:** OpenAI GPT-4o with structured outputs
 - **Validation:** Zod for runtime type safety
 - **Testing:** Vitest (12 tests - unit, integration, and real API validation)

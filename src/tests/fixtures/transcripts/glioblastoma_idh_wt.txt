@@ -1,0 +1,21 @@
+Doctor: Thanks for coming in. I reviewed your MRI results. The lesion is consistent with recurrent glioblastoma.
+
+Patient: I figured as much. I finished radiation and temozolomide six months ago, but my symptoms came back.
+
+Doctor: Right. You’re 45, correct?
+
+Patient: Yes, 45.
+
+Doctor: The pathology report shows IDH-wildtype and MGMT unmethylated, correct?
+
+Patient: That’s what they told me. I don’t really know what that means.
+
+Doctor: It means the tumor might not respond well to standard chemo. Have you had any other treatments since?
+
+Patient: Just steroids to help with swelling. No clinical trials yet.
+
+Doctor: Okay, and you’re based in Seattle, Washington?
+
+Patient: Yes, but I can travel within the Pacific Northwest.
+
+Doctor: Perfect. We’ll search for glioblastoma trials accepting IDH-wildtype patients post-chemoradiation.

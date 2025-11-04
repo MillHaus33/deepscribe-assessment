@@ -26,6 +26,13 @@ vi.mock('@/lib/providers/llm', () => ({
           location: userMessage.includes('San Francisco')
             ? { city: 'San Francisco', state: 'CA' }
             : undefined,
+          ctgovQuery: {
+            conditionQuery: 'melanoma',
+            termQuery: [
+              userMessage.includes('BRAF') ? '(BRAF V600E) OR (BRAF mutation) OR (BRAF V600)' : '',
+              userMessage.includes('Stage IV') ? '(metastatic) OR (stage IV)' : '',
+            ].filter(Boolean).join(' OR '),
+          },
         };
         return JSON.stringify(profile); // Return raw JSON string
       }
@@ -34,6 +41,10 @@ vi.mock('@/lib/providers/llm', () => ({
       const defaultProfile = {
         demographics: { age: 50, sex: 'other' },
         conditions: ['General Condition'],
+        ctgovQuery: {
+          conditionQuery: 'General Condition',
+          termQuery: '',
+        },
       };
       return JSON.stringify(defaultProfile); // Return raw JSON string
     }),
@@ -62,6 +73,12 @@ describe('extractPatientProfile', () => {
     expect(profile.priorTherapies).toBeDefined();
     expect(profile.performanceStatus).toBe('ECOG 1');
     expect(profile.location?.city).toBe('San Francisco');
+
+    // Verify ctgovQuery follows new prompt guidance
+    expect(profile.ctgovQuery.conditionQuery).toBe('melanoma');
+    expect(profile.ctgovQuery.termQuery).toContain('BRAF');
+    expect(profile.ctgovQuery.conditionQuery).not.toContain('BRAF');
+    expect(profile.ctgovQuery.conditionQuery).not.toContain('AND');
   });
 
   it('should throw error for empty transcript', async () => {

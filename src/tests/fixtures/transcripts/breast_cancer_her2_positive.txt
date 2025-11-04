@@ -1,0 +1,19 @@
+Doctor: Hi, I reviewed your pathology results. The biopsy confirms invasive ductal carcinoma, HER2-positive.
+
+Patient: That’s what I was afraid of. What’s the next step?
+
+Doctor: You’re 47, correct?
+
+Patient: Yes. I’ve had one lumpectomy already.
+
+Doctor: Okay. You received trastuzumab and paclitaxel for six cycles, right?
+
+Patient: Yes, but the cancer returned in a lymph node six months later.
+
+Doctor: Got it. No major heart problems or other chronic conditions?
+
+Patient: No, I’m healthy otherwise.
+
+Doctor: Great. You live in San Diego, California?
+
+Patient: Yes. I’d consider traveling for trials targeting HER2-positive recurrence.

@@ -22,6 +22,8 @@ export interface CTGovQueryParams {
   'query.cond'?: string;
   'filter.overallStatus'?: string;
   'query.term'?: string;
+  'filter.advanced'?: string; // For age filtering: AREA[MinimumAge]RANGE[MIN,X years] AND AREA[MaximumAge]RANGE[X years,MAX]
+  aggFilters?: string; // For sex filtering: sex:m, sex:f, or sex:all
   fields?: string;
   pageSize?: number;
   sort?: string;
@@ -32,9 +34,9 @@ export interface CTGovQueryParams {
 /**
  * Build ClinicalTrials.gov API v2 query parameters from a patient profile.
  * Constructs a query that filters trials based on the patient's conditions,
- * demographics, biomarkers, and location.
+ * demographics, and location using LLM-generated ESSIE query syntax.
  *
- * @param profile - The patient profile with extracted medical information
+ * @param profile - The patient profile with extracted medical information and LLM-generated queries
  * @returns Query parameters object for the CT.gov API
  */
 export function buildCTGovQuery(profile: PatientProfile): CTGovQueryParams {
@@ -68,31 +70,42 @@ export function buildCTGovQuery(profile: PatientProfile): CTGovQueryParams {
     sort: 'LastUpdatePostDate:desc',
   };
 
-  // Build condition query from patient conditions
-  if (profile.conditions && profile.conditions.length > 0) {
-    // Join multiple conditions with OR logic
-    params['query.cond'] = profile.conditions.join(' OR ');
+  // Use LLM-generated ESSIE query syntax for condition search
+  // The LLM constructs optimized queries with proper biomarker combinations
+  if (profile.ctgovQuery.conditionQuery) {
+    params['query.cond'] = profile.ctgovQuery.conditionQuery;
   }
 
-  // Build additional search terms from biomarkers and stage
-  const searchTerms: string[] = [];
-
-  if (profile.biomarkers && profile.biomarkers.length > 0) {
-    profile.biomarkers.forEach((biomarker) => {
-      if (biomarker.value) {
-        searchTerms.push(`${biomarker.name} ${biomarker.value}`);
-      } else {
-        searchTerms.push(biomarker.name);
-      }
-    });
+  // Use LLM-generated term query for additional search terms
+  if (profile.ctgovQuery.termQuery) {
+    params['query.term'] = profile.ctgovQuery.termQuery;
   }
 
-  if (profile.stage) {
-    searchTerms.push(profile.stage);
+  // Add age filtering with validation
+  if (profile.demographics?.age) {
+    const age = profile.demographics.age;
+    // Validate age is reasonable (between 0 and 120)
+    if (age > 0 && age <= 120) {
+      // Filter trials where patient age falls within the trial's age range
+      params['filter.advanced'] = `AREA[MinimumAge]RANGE[MIN,${age} years] AND AREA[MaximumAge]RANGE[${age} years,MAX]`;
+    }
   }
 
-  if (searchTerms.length > 0) {
-    params['query.term'] = searchTerms.join(' OR ');
+  // Add sex filtering with mapping
+  if (profile.demographics?.sex) {
+    const sex = profile.demographics.sex.toLowerCase();
+    // Map to CT.gov format: m (male), f (female), all (all)
+    const sexMap: Record<string, string> = {
+      male: 'm',
+      female: 'f',
+      all: 'all',
+      other: 'all', // Treat "other" as "all" to be inclusive
+    };
+
+    const mappedSex = sexMap[sex];
+    if (mappedSex) {
+      params.aggFilters = `sex:${mappedSex}`;
+    }
   }
 
   // TODO: Add geographic filtering with proper distance-based format

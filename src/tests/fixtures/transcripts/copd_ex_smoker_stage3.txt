@@ -1,0 +1,17 @@
+Doctor: Hi, I see you brought your spirometry results. How’s your breathing been lately?
+
+Patient: Worse over the past few months. I quit smoking last year, but I still get winded walking short distances.
+
+Doctor: You’ve done great quitting. The results show GOLD stage III COPD. You’re using tiotropium and albuterol?
+
+Patient: Yes, daily inhaler and rescue inhaler as needed.
+
+Doctor: Have you ever been on roflumilast or long-term oxygen?
+
+Patient: No oxygen yet. My pulmonologist mentioned clinical trials for severe COPD.
+
+Doctor: Excellent. You’re 68 and living in Denver, right?
+
+Patient: Yes, that’s right.
+
+Doctor: Okay, I’ll check for recruiting trials focused on advanced COPD for former smokers.

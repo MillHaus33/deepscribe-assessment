@@ -60,6 +60,22 @@ export async function POST(request: NextRequest) {
     // Extract patient profile
     const patientProfile = await extractPatientProfile(transcript);
 
+    // Validate that medical information was extracted
+    // If no conditions, biomarkers, or stage are found, the transcript likely doesn't contain medical information
+    if (
+      (!patientProfile.conditions || patientProfile.conditions.length === 0) &&
+      !patientProfile.biomarkers &&
+      !patientProfile.stage
+    ) {
+      return NextResponse.json(
+        {
+          error:
+            'No medical conditions identified in transcript. Please upload a valid patient-doctor conversation.',
+        },
+        { status: 400 }
+      );
+    }
+
     // Search for clinical trials
     const trials = await searchAndMapTrials(patientProfile);
 

@@ -21,6 +21,11 @@ export const LocationSchema = z.object({
   zip: z.string().nullable().optional(),
 });
 
+export const CTGovQuerySchema = z.object({
+  conditionQuery: z.string().nullable(),
+  termQuery: z.string().nullable(),
+});
+
 export const PatientProfileSchema = z.object({
   demographics: DemographicsSchema,
   conditions: z.array(z.string()),
@@ -31,12 +36,14 @@ export const PatientProfileSchema = z.object({
   performanceStatus: z.string().nullable().optional(),
   location: LocationSchema.nullable().optional(),
   notes: z.string().nullable().optional(),
+  ctgovQuery: CTGovQuerySchema,
 });
 
 export type PatientProfile = z.infer<typeof PatientProfileSchema>;
 export type Demographics = z.infer<typeof DemographicsSchema>;
 export type Biomarker = z.infer<typeof BiomarkerSchema>;
 export type Location = z.infer<typeof LocationSchema>;
+export type CTGovQuery = z.infer<typeof CTGovQuerySchema>;
 
 // ============================================================================
 // Clinical Trial Schema
