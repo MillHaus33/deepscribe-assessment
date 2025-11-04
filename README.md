@@ -35,12 +35,12 @@ This application implements a **full-stack solution** with an intuitive web inte
 
 ## Live Demo
 
-**Web Application:** https://deepscribe-assessment-9snjxqmni-millhaus33s-projects.vercel.app/
+**Web Application:** https://deepscribe-assessment.vercel.app/
 
 **API Endpoints:**
 
-- `https://deepscribe-assessment-9snjxqmni-millhaus33s-projects.vercel.app/api/search/transcript`
-- `https://deepscribe-assessment-9snjxqmni-millhaus33s-projects.vercel.app/api/search/profile`
+- `https://deepscribe-assessment.vercel.app/api/search/transcript`
+- `https://deepscribe-assessment.vercel.app/api/search/profile`
 
 Try it out with the sample transcripts included in the repository!
 
