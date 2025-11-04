@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import { POST } from '@/app/api/search/route';
+import { POST } from '@/app/api/search/transcript/route';
 import { NextRequest } from 'next/server';
 
 // Mock the LLM provider to return raw JSON strings
@@ -47,7 +47,7 @@ function createTestFile(content: string, filename: string, type: string = 'text/
   return new File([blob], filename, { type });
 }
 
-describe('POST /api/search - Integration Tests', () => {
+describe('POST /api/search/transcript - Integration Tests', () => {
   const originalFetch = global.fetch;
 
   beforeEach(() => {
@@ -65,7 +65,7 @@ describe('POST /api/search - Integration Tests', () => {
     // Create empty FormData
     const formData = new FormData();
 
-    const request = new NextRequest('http://localhost:3000/api/search', {
+    const request = new NextRequest('http://localhost:3000/api/search/transcript', {
       method: 'POST',
       body: formData,
     });
@@ -93,7 +93,7 @@ describe('POST /api/search - Integration Tests', () => {
     const formData = new FormData();
     formData.append('file', file);
 
-    const request = new NextRequest('http://localhost:3000/api/search', {
+    const request = new NextRequest('http://localhost:3000/api/search/transcript', {
       method: 'POST',
       body: formData,
     });
@@ -104,5 +104,87 @@ describe('POST /api/search - Integration Tests', () => {
 
     const data = await response.json();
     expect(data.error).toBe('ClinicalTrials.gov service unavailable');
+  });
+
+  it('should return profile and trials in successful response', async () => {
+    // Mock successful CT.gov API response
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    (global.fetch as any).mockResolvedValueOnce({
+      ok: true,
+      json: async () => ({
+        studies: [
+          {
+            protocolSection: {
+              identificationModule: {
+                nctId: 'NCT12345678',
+                briefTitle: 'Test Trial for Melanoma',
+              },
+              statusModule: {
+                overallStatus: 'RECRUITING',
+              },
+              descriptionModule: {
+                briefSummary: 'A test trial summary',
+              },
+              conditionsModule: {
+                conditions: ['Melanoma'],
+              },
+              contactsLocationsModule: {
+                locations: [
+                  {
+                    city: 'San Francisco',
+                    state: 'California',
+                    country: 'United States',
+                    facility: 'Test Hospital',
+                  },
+                ],
+              },
+            },
+          },
+        ],
+      }),
+    });
+
+    const transcriptContent = 'Patient with melanoma and BRAF V600E mutation';
+    const file = createTestFile(transcriptContent, 'test.txt');
+
+    const formData = new FormData();
+    formData.append('file', file);
+
+    const request = new NextRequest('http://localhost:3000/api/search/transcript', {
+      method: 'POST',
+      body: formData,
+    });
+
+    const response = await POST(request);
+
+    expect(response.status).toBe(200);
+
+    const data = await response.json();
+
+    // Verify response includes both profile and trials
+    expect(data).toHaveProperty('profile');
+    expect(data).toHaveProperty('trials');
+
+    // Verify profile structure
+    expect(data.profile).toMatchObject({
+      demographics: { age: 55, sex: 'male' },
+      conditions: ['Metastatic Melanoma'],
+      biomarkers: [{ name: 'BRAF', value: 'V600E' }],
+      stage: 'Stage IV',
+      performanceStatus: 'ECOG 1',
+      ctgovQuery: {
+        conditionQuery: 'melanoma',
+        termQuery: '(BRAF V600E) OR (BRAF mutation) OR (BRAF V600) OR (metastatic) OR (stage IV)',
+      },
+    });
+
+    // Verify trials array
+    expect(Array.isArray(data.trials)).toBe(true);
+    expect(data.trials.length).toBeGreaterThan(0);
+    expect(data.trials[0]).toMatchObject({
+      nctId: 'NCT12345678',
+      title: 'Test Trial for Melanoma',
+      overallStatus: 'RECRUITING',
+    });
   });
 });

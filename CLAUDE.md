@@ -35,7 +35,7 @@ Transcript Upload → LLM Extraction → CT.gov API Search → Trial Results
 
 ### Layered Architecture
 
-**1. API Layer** (`src/app/api/search/route.ts`)
+**1. API Layer** (`src/app/api/search/transcript/route.ts`, `src/app/api/search/profile/route.ts`)
 - HTTP request handling, file upload validation, orchestration
 - Maps errors to HTTP status codes (400/502/500)
 - NO business logic - pure HTTP concerns
@@ -166,7 +166,9 @@ global.fetch = vi.fn().mockResolvedValue({
 ```
 src/
 ├── app/
-│   ├── api/search/route.ts     # API endpoint
+│   ├── api/search/
+│   │   ├── transcript/route.ts # POST /api/search/transcript (file upload)
+│   │   └── profile/route.ts    # POST /api/search/profile (profile search)
 │   ├── page.tsx                # Home page (frontend)
 │   └── layout.tsx              # Root layout
 ├── components/                 # Reusable UI components
@@ -276,9 +278,11 @@ try {
 - `OPENAI_API_KEY` - OpenAI API key (no default, required)
 
 **Optional (with defaults):**
-- `CTGOV_API_BASE_URL` - Default: `https://clinicaltrials.gov/api/v2/studies`
-- `MAX_FILE_SIZE` - Default: `1048576` (1MB)
 - `TEST_EXTRACTION` - Default: undefined (skips real LLM test)
+
+**Application Constants (in code, not environment):**
+- `CTGOV_API_BASE_URL` - `https://clinicaltrials.gov/api/v2/studies` (defined in `src/lib/ctgov.ts`)
+- `MAX_FILE_SIZE` - `1048576` bytes / 1MB (defined in `src/app/api/search/transcript/route.ts`)
 
 ---
 

@@ -1,7 +1,7 @@
 import { PatientProfile, Trial, TrialSchema } from './schemas';
 
-const CTGOV_API_BASE_URL =
-  process.env.CTGOV_API_BASE_URL || 'https://clinicaltrials.gov/api/v2/studies';
+// ClinicalTrials.gov API v2 base URL (non-sensitive configuration)
+const CTGOV_API_BASE_URL = 'https://clinicaltrials.gov/api/v2/studies';
 
 /**
  * Custom error class for ClinicalTrials.gov API failures.

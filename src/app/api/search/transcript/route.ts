@@ -2,10 +2,11 @@ import { NextRequest, NextResponse } from 'next/server';
 import { extractPatientProfile } from '@/lib/extract';
 import { searchAndMapTrials, CTGovAPIError } from '@/lib/ctgov';
 
-const MAX_FILE_SIZE = parseInt(process.env.MAX_FILE_SIZE || '1048576', 10); // 1MB default
+// Maximum file size for transcript uploads (non-sensitive configuration)
+const MAX_FILE_SIZE = 1048576; // 1MB
 
 /**
- * POST /api/search
+ * POST /api/search/transcript
  * Accepts a transcript file, extracts patient profile, and returns matching clinical trials.
  */
 export async function POST(request: NextRequest) {
@@ -79,8 +80,14 @@ export async function POST(request: NextRequest) {
     // Search for clinical trials
     const trials = await searchAndMapTrials(patientProfile);
 
-    // Return trials (already validated in mapStudyToTrial)
-    return NextResponse.json({ trials }, { status: 200 });
+    // Return profile and trials
+    return NextResponse.json(
+      {
+        profile: patientProfile,
+        trials,
+      },
+      { status: 200 }
+    );
   } catch (error) {
     // Handle ClinicalTrials.gov API errors (type-safe)
     if (error instanceof CTGovAPIError) {
@@ -95,7 +102,7 @@ export async function POST(request: NextRequest) {
 
     // Handle all other unexpected errors
     const message = error instanceof Error ? error.message : 'Unknown error';
-    console.error('API /search error:', message);
+    console.error('API /search/transcript error:', message);
 
     return NextResponse.json(
       {

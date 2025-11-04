@@ -4,17 +4,30 @@ A full-stack Next.js application that analyzes patient-doctor conversation trans
 
 ---
 
+## Features
+
+- **AI-Powered Extraction:** GPT-4o extracts structured patient data from natural conversation transcripts
+- **Intelligent Trial Matching:** Automatic query building with ESSIE syntax for ClinicalTrials.gov API
+- **Editable Patient Profiles:** View and edit extracted patient condition data with modal form
+- **Refined Search:** Modify search queries and re-run matching
+- **Drag & Drop Upload:** Simple file upload with visual feedback and error handling
+- **Comprehensive Results:** Detailed trial information including eligibility criteria, phases, and locations
+
+- **Production Ready:** Full TypeScript type safety, comprehensive testing, and error handling
+
+---
+
 ## Overview
 
 ### Approach
 
 This application implements a **full-stack solution** with an intuitive web interface and robust backend API.
 
-**Web Interface:** React-based UI with drag-and-drop file upload, real-time loading states, and comprehensive trial results display. Features responsive design with Tailwind CSS, error handling with dismissible messages, and "no results" states for better user experience.
+**Web Interface:** React-based UI with drag-and-drop file upload, real-time loading states, and comprehensive trial results display. Features responsive design with Tailwind CSS, error handling with dismissible messages, and "no results" states for better user experience. **Editable Patient Profile:** After initial search, doctors or patients can view and edit the extracted patient profile (demographics, conditions, biomarkers, stage, etc.) and re-run the search with refined criteria.
 
 **LLM Extraction:** Uses OpenAI GPT-4o with structured outputs to extract patient profiles from transcripts. The LLM is prompted to identify demographics (age, sex), medical conditions, biomarkers (e.g., BRAF V600E), disease stage, performance status, and location. Zod schemas enforce runtime validation to ensure data integrity.
 
-**Clinical Trials Matching:** Queries the ClinicalTrials.gov API v2 with intelligent filtering. The query builder combines conditions and biomarkers into search terms, filters by recruiting status, and retrieves detailed trial information including eligibility criteria and locations. Unicode normalization ensures compatibility with LLM-generated text.
+**Clinical Trials Matching:** Queries the ClinicalTrials.gov API v2 with filtering. The query builder combines conditions and biomarkers into search terms, filters by recruiting status, and retrieves detailed trial information including eligibility criteria and locations. Unicode normalization ensures compatibility with LLM-generated text.
 
 **Architecture:** Modular design with clear separation of concerns - provider abstraction for LLM flexibility, business logic in extraction layer, and robust error handling with custom error types. TypeScript strict mode and comprehensive testing ensure production readiness.
 
@@ -22,11 +35,14 @@ This application implements a **full-stack solution** with an intuitive web inte
 
 ## Live Demo
 
-**Web Application:** `[Deployment URL will be added here]`
+**Web Application:** https://deepscribe-assessment-9snjxqmni-millhaus33s-projects.vercel.app/
 
-**API Endpoint:** `[Deployment URL]/api/search`
+**API Endpoints:**
 
-*(Available for local demonstration - see setup instructions below)*
+- `https://deepscribe-assessment-9snjxqmni-millhaus33s-projects.vercel.app/api/search/transcript`
+- `https://deepscribe-assessment-9snjxqmni-millhaus33s-projects.vercel.app/api/search/profile`
+
+Try it out with the sample transcripts included in the repository!
 
 ---
 
@@ -40,27 +56,32 @@ This application implements a **full-stack solution** with an intuitive web inte
 ### Installation
 
 1. **Clone the repository**
+
    ```bash
    git clone <repository-url>
    cd deepscribe-assessment
    ```
 
 2. **Install dependencies**
+
    ```bash
    npm install
    ```
 
 3. **Configure environment variables**
+
    ```bash
    cp .env.example .env
    ```
 
    Edit `.env` and add your OpenAI API key:
+
    ```env
    OPENAI_API_KEY=sk-your-actual-api-key-here
    ```
 
 4. **Run the development server**
+
    ```bash
    npm run dev
    ```
@@ -70,20 +91,29 @@ This application implements a **full-stack solution** with an intuitive web inte
 5. **Using the Web Interface**
 
    Open `http://localhost:3000` in your browser. You can:
+
    - **Drag and drop** a transcript file (`.txt` or `.md`) onto the upload area
    - **Click** the upload area to browse for a file
-   - Sample transcripts are available in `src/tests/fixtures/transcripts/`
+   - **Sample transcripts** are available in `src/tests/fixtures/transcripts/`:
+     - `breast_cancer_her2_positive.txt` - Breast cancer with HER2+ biomarker
+     - `melanoma_braf_ecog1.txt` - Metastatic melanoma with BRAF V600E
+     - `glioblastoma_idh_wt.txt` - Brain cancer with IDH-wildtype
+     - `heart_failure_nyha2.txt` - Cardiovascular condition
+     - And more...
 
    After upload, the app will:
+
    - Analyze the transcript using AI (5-10 seconds)
-   - Display matching clinical trials with details
+   - Display the extracted patient profile and matching clinical trials
+   - **View & Edit Profile:** Click the "View & Edit Patient Profile" button to modify extracted data
+   - **Refine Search:** Edit conditions, biomarkers, demographics, or search queries and re-run
    - Show trial eligibility criteria and locations
    - Provide links to ClinicalTrials.gov for each trial
 
 6. **Testing the API Directly** (optional)
    ```bash
-   # Use curl to test the API endpoint
-   curl -X POST http://localhost:3000/api/search \
+   # Use curl to test the transcript endpoint
+   curl -X POST http://localhost:3000/api/search/transcript \
      -F "file=@src/tests/fixtures/transcripts/melanoma_braf_ecog1.txt"
    ```
 
@@ -101,19 +131,40 @@ npm run lint      # Check code quality
 
 ## API Usage
 
-### `POST /api/search`
+### `POST /api/search/transcript`
 
-Accepts a transcript file (`.txt` or `.md`, max 1MB) and returns matching clinical trials.
+Accepts a transcript file (`.txt` or `.md`, max 1MB), extracts patient profile using AI, and returns matching clinical trials.
 
 **Example Request:**
+
 ```bash
-curl -X POST http://localhost:3000/api/search \
+curl -X POST http://localhost:3000/api/search/transcript \
   -F "file=@transcript.txt"
 ```
 
 **Example Response:**
+
 ```json
 {
+  "profile": {
+    "demographics": {
+      "age": 55,
+      "sex": "male"
+    },
+    "conditions": ["Metastatic Melanoma"],
+    "biomarkers": [
+      {
+        "name": "BRAF",
+        "value": "V600E"
+      }
+    ],
+    "stage": "Stage IV",
+    "performanceStatus": "ECOG 1",
+    "ctgovQuery": {
+      "conditionQuery": "melanoma",
+      "termQuery": "(BRAF V600E) OR (BRAF mutation) OR (BRAF V600)"
+    }
+  },
   "trials": [
     {
       "nctId": "NCT04267848",
@@ -139,6 +190,31 @@ curl -X POST http://localhost:3000/api/search \
 }
 ```
 
+### `POST /api/search/profile`
+
+Accepts a patient profile and searches for matching clinical trials. Skips AI extraction since the profile is already structured.
+
+**Example Request:**
+
+```bash
+curl -X POST http://localhost:3000/api/search/profile \
+  -H "Content-Type: application/json" \
+  -d '{
+    "profile": {
+      "demographics": { "age": 60, "sex": "female" },
+      "conditions": ["Breast Cancer"],
+      "biomarkers": [{ "name": "HER2", "value": "positive" }],
+      "stage": "Stage II",
+      "ctgovQuery": {
+        "conditionQuery": "breast cancer",
+        "termQuery": "(HER2 positive) OR (HER2+)"
+      }
+    }
+  }'
+```
+
+**Response:** Same format as `/api/search/transcript` - returns `{ profile, trials }`
+
 ---
 
 ## Assumptions
@@ -146,10 +222,9 @@ curl -X POST http://localhost:3000/api/search \
 1. **Transcript format** - Plain text files (.txt or .md) containing patient-doctor conversations, max 1MB
 2. **LLM reliability** - OpenAI structured outputs provide consistent JSON extraction without additional validation layers
 3. **No authentication** - MVP doesn't require user auth or API keys for client requests
-4. **No data persistence** - Transcripts are processed on-demand and not stored to comply with PHI regulations
-5. **Privacy compliance** - Transcripts are never logged; only structured, de-identified data is processed
-6. **ClinicalTrials.gov availability** - Assumes API is available; handles errors gracefully with 502 responses
-7. **Client-side processing** - File upload and validation happen in the browser before sending to the API
+4. **No data persistence** - Transcripts are processed on-demand and not stored
+5. **ClinicalTrials.gov availability** - Assumes API is available; handles errors gracefully with 502 responses
+6. **Client-side processing** - File upload and validation happen in the browser before sending to the API
 
 ---
 
@@ -159,7 +234,7 @@ curl -X POST http://localhost:3000/api/search \
 - **Frontend:** React 19 with Tailwind CSS v4 for styling
 - **AI/LLM:** OpenAI GPT-4o with structured outputs
 - **Validation:** Zod for runtime type safety
-- **Testing:** Vitest (12 tests - unit, integration, and real API validation)
+- **Testing:** Vitest (13 tests - unit, integration, and real API validation)
 - **Code Quality:** ESLint, husky pre-commit hooks
 
 ---

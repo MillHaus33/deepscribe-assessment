@@ -97,6 +97,7 @@ export type Sex = z.infer<typeof SexSchema>;
 // ============================================================================
 
 export const SearchResponseSchema = z.object({
+  profile: PatientProfileSchema,
   trials: z.array(TrialSchema),
 });
 
