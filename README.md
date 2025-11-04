@@ -4,26 +4,35 @@ A full-stack Next.js application that analyzes patient-doctor conversation trans
 
 ---
 
-## Features
-
-- **AI-Powered Extraction:** GPT-4o extracts structured patient data from natural conversation transcripts
-- **Intelligent Trial Matching:** Automatic query building with ESSIE syntax for ClinicalTrials.gov API
-- **Editable Patient Profiles:** View and edit extracted patient condition data with modal form
-- **Refined Search:** Modify search queries and re-run matching
-- **Drag & Drop Upload:** Simple file upload with visual feedback and error handling
-- **Comprehensive Results:** Detailed trial information including eligibility criteria, phases, and locations
-
-- **Production Ready:** Full TypeScript type safety, comprehensive testing, and error handling
-
----
-
 ## Overview
 
-### Approach
+### Approach & Comments
+
+**Backend Implementation**
+
+I started by building a backend route for receiving transcript files, performing LLM extraction, building ClinicalTrials.gov API query parameters, and processing responses. I used a provider pattern that separates LLM infrastructure (OpenAI) from business logic, making it straightforward to add different providers or use cases. Tests with Vitest and runtime validation with Zod ensure accuracy and type safety.
+
+**Frontend & Query Quality**
+
+I created a simple frontend with drag-and-drop upload and trial results display. Rather than implementing pagination (nextPageToken) or expandable trial details, I focused on improving match quality by moving query building into the LLM extraction system. I generated test transcripts included in the repo and did analysis with my coding agent.
+
+I chose a single LLM call for simplicity, though a two-stage architecture could further improve results: one call strictly for extraction, then a second call to generate the `query.cond` and `query.term` parameters for the ClinicalTrials.gov API request.
+
+**Manual Query Refinement Feature**
+
+I added the ability to manually edit the `query.cond` and `query.term` parameters in the UI. This addresses a key challenge I discovered: searching the vast ClinicalTrials.gov database is difficult, and AI extraction won't always match clinician intent. This feature provides immediate value and creates a feedback loop for future improvements by capturing how users adjust AI generated queries. The adjustments could be recorded and analyzed to understand gaps between system extraction and doctor or patient expectations.
+
+**Design Decisions**
+
+I considered several suggested enhancements. For trial ranking, ranking only the top 20 results per page seemed misleading without access to the full result set, and implementing ranking across all trials felt beyond assessment scope. For data persistence, implementing a database seemed beyond MVP scope, and local storage didn't seem creative. I also considered using the location decay filter by parsing patient location but ultimately decided the manual refinement feature provided more flexibility. Instead of these additions, I prioritized the query refinement feature, which delivers immediate value and provides data for future system improvements.
+
+### Details
 
 This application implements a **full-stack solution** with an intuitive web interface and robust backend API.
 
-**Web Interface:** React-based UI with drag-and-drop file upload, real-time loading states, and comprehensive trial results display. Features responsive design with Tailwind CSS, error handling with dismissible messages, and "no results" states for better user experience. **Editable Patient Profile:** After initial search, doctors or patients can view and edit the extracted patient profile (demographics, conditions, biomarkers, stage, etc.) and re-run the search with refined criteria.
+**Web Interface:** React-based UI with drag-and-drop file upload, real-time loading states, and comprehensive trial results display. Features responsive design with Tailwind CSS, error handling with dismissible messages, and "no results" states for better user experience.
+
+**Search Refinement:** After initial search, users can view the extracted patient profile and manually edit the ClinicalTrials.gov search query parameters (condition query and term query) to refine results and re-run the search.
 
 **LLM Extraction:** Uses OpenAI GPT-4o with structured outputs to extract patient profiles from transcripts. The LLM is prompted to identify demographics (age, sex), medical conditions, biomarkers (e.g., BRAF V600E), disease stage, performance status, and location. Zod schemas enforce runtime validation to ensure data integrity.
 
@@ -105,8 +114,7 @@ Try it out with the sample transcripts included in the repository!
 
    - Analyze the transcript using AI (5-10 seconds)
    - Display the extracted patient profile and matching clinical trials
-   - **View & Edit Profile:** Click the "View & Edit Patient Profile" button to modify extracted data
-   - **Refine Search:** Edit conditions, biomarkers, demographics, or search queries and re-run
+   - **Refine Search:** Click "Refine Search Criteria" to view the extracted profile and manually edit the search query parameters (condition query and term query) to re-run the search
    - Show trial eligibility criteria and locations
    - Provide links to ClinicalTrials.gov for each trial
 
